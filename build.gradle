@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) Microsoft Corporation. All rights reserved.
+ *
+ * Licensed under the MIT license.
+ */
+
+group 'com.skype.research'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+version "1.0"
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task sourcesJar(type: Jar) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+test {
+    useJUnit()
+    
+    scanForTestClasses true
+    
+    include 'com/skype/research/util/adaptable/**'
+    include 'com/skype/research/util/adaptation/**'
+}
+
+def getArtifactPath() {
+    return "build/libs/${project.name}-${version}.jar"
+}
